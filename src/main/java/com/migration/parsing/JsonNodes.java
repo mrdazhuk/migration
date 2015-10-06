@@ -8,6 +8,8 @@ public class JsonNodes {
 	public static final String UPDATE_NODE = "update";
 	public static final String DOWNGRADE_NODE = "downgrade";
 
+	public static final String RAW_NODE = "query";
+
 	//Column
 	public static final String NAME_NODE = "name";
 	public static final String TYPE_NODE = "type";
@@ -29,6 +31,7 @@ public class JsonNodes {
 	public static final String CREATE_TABLE_ACTION_NODE = "create";
 	public static final String RENAME_TABLE_ACTION_NODE = "rename";
 	public static final String DROP_TABLE_ACTION_NODE = "drop";
+	public static final String RAW_QUERY_ACTION_NODE = "raw";
 
 	private JsonNodes() {
 	}
