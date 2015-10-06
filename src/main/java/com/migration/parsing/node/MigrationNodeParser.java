@@ -6,6 +6,7 @@ import com.migration.MigrationException;
 import com.migration.ParseException;
 import com.migration.VersionMigration;
 import com.migration.action.TableAction;
+import com.migration.parsing.action.DropTableParser;
 import com.migration.parsing.JsonNodes;
 import com.migration.parsing.action.ActionParser;
 import com.migration.parsing.action.AddColumnsParser;
@@ -64,6 +65,8 @@ public class MigrationNodeParser implements NodeParser<VersionMigration, JsonEle
 				return new CreateTableParser();
 			case JsonNodes.RENAME_TABLE_ACTION_NODE:
 				return new RenameTableParser();
+			case JsonNodes.DROP_TABLE_ACTION_NODE:
+				return new DropTableParser();
 		}
 		throw new ParseException("No action found " + action);
 	}

@@ -15,6 +15,7 @@ public class JsonNodes {
 	public static final String DEFAULT_NODE = "default";
 	public static final String INDEX_NODE = "index";
 	public static final String REFERENCE_NODE = "reference";
+	public static final String PRIMARY_NODE = "primary";
 
 	//Table
 	public static final String COLUMNS_NODE = "columns";
@@ -27,6 +28,7 @@ public class JsonNodes {
 	public static final String UPDATE_COLUMNS_ACTION_NODE = "update_columns";
 	public static final String CREATE_TABLE_ACTION_NODE = "create";
 	public static final String RENAME_TABLE_ACTION_NODE = "rename";
+	public static final String DROP_TABLE_ACTION_NODE = "drop";
 
 	private JsonNodes() {
 	}
