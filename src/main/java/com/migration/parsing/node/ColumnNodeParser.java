@@ -1,5 +1,7 @@
 package com.migration.parsing.node;
 
+import android.text.TextUtils;
+
 import com.google.gson.JsonObject;
 import com.migration.MigrationException;
 import com.migration.ParseException;
@@ -10,6 +12,7 @@ import com.migration.schema.Column;
  * Created by yuriydazhuk on 9/30/15.
  */
 public class ColumnNodeParser implements NodeParser<Column, JsonObject> {
+
 
 	@Override
 	public Column parse(JsonObject column) throws MigrationException {
@@ -30,6 +33,11 @@ public class ColumnNodeParser implements NodeParser<Column, JsonObject> {
 		if (column.has(JsonNodes.INDEX_NODE) && column.get(JsonNodes.INDEX_NODE).getAsBoolean()) {
 			builder.indexed();
 		}
+
+		if (column.has(JsonNodes.REFERENCE_NODE)) {
+			builder.reference(column.get(JsonNodes.REFERENCE_NODE).getAsString());
+		}
+
 		return builder.build();
 	}
 }

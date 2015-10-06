@@ -14,6 +14,7 @@ public class JsonNodes {
 	public static final String NULLABLE_NODE = "nullable";
 	public static final String DEFAULT_NODE = "default";
 	public static final String INDEX_NODE = "index";
+	public static final String REFERENCE_NODE = "reference";
 
 	//Table
 	public static final String COLUMNS_NODE = "columns";

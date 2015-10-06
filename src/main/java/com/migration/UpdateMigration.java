@@ -12,7 +12,7 @@ public class UpdateMigration extends MigrationDirection {
 
 	@Override
 	public void migrate(int from, int to) throws MigrationException {
-		for (int version = from; version <= to; version++) {
+		for (int version = from + 1; version <= to; version++) {
 			this.migrationParser.parseUpdate(version).beginMigration(this.db);
 		}
 	}

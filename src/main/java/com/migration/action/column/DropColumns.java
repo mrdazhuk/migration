@@ -2,6 +2,7 @@ package com.migration.action.column;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.migration.MigrationException;
 import com.migration.StatementsUtils;
 import com.migration.action.TableAction;
 import com.migration.action.index.CreateIndexes;
@@ -28,7 +29,7 @@ public class DropColumns extends TableAction {
 	}
 
 	@Override
-	public void applyUpdatesForTable(SQLiteDatabase db, Table table) throws SqlFormatException {
+	public void applyUpdatesForTable(SQLiteDatabase db, Table table) throws MigrationException {
 		List<Column> newColumns = removeColumns(table.getColumns());
 
 

@@ -7,13 +7,16 @@ import com.migration.schema.type.DataType;
 /**
  * Created by yuriydazhuk on 9/28/15.
  */
-public class Column {
+public class Column implements SqlStatement {
 	private boolean primary;
 	private boolean index;
 	private String name;
 	private DataType dataType;
 	private String defaultValue = "";
 	private boolean nullable = true;
+
+
+	private Reference reference;
 
 	private Column(Column column) {
 		this.dataType = column.getDataType();
@@ -22,6 +25,11 @@ public class Column {
 		this.index = column.isIndexed();
 		this.nullable = column.isNullable();
 		this.defaultValue = column.getDefaultValue();
+
+		Reference reference = column.getReference();
+		if (reference != null) {
+			this.reference = new Reference(reference.getTableName(), reference.getReferenceFieldName());
+		}
 	}
 
 	private Column() {
@@ -55,7 +63,12 @@ public class Column {
 		return new ColumnBuilder();
 	}
 
-	public String toSqlDefinitionString() throws SqlFormatException {
+	public Reference getReference() {
+		return this.reference;
+	}
+
+	@Override
+	public String toSqlStatement() throws SqlFormatException {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);
 		builder.append(" " + this.dataType.getName());
@@ -71,6 +84,11 @@ public class Column {
 				throw new SqlFormatException(String.format("Missing default value for not nullable field '%s'", this.name));
 			}
 		}
+
+		if (this.reference != null) {
+			builder.append(String.format(" REFERENCES %s", this.reference.toSqlStatement()));
+		}
+
 		return builder.toString();
 	}
 
@@ -93,6 +111,21 @@ public class Column {
 
 		public ColumnBuilder name(String name) {
 			this.column.name = name;
+			return this;
+		}
+
+		public ColumnBuilder reference(String tableName) {
+			String[] parts = tableName.split("\\.");
+			if (parts.length == 1) {
+				this.column.reference = new Reference(tableName);
+			} else {
+				reference(parts[0], parts[1]);
+			}
+			return this;
+		}
+
+		public ColumnBuilder reference(String tableName, String referenceFieldName) {
+			this.column.reference = new Reference(tableName, referenceFieldName);
 			return this;
 		}
 

@@ -13,10 +13,19 @@ import com.migration.schema.TableInfoLoader;
 public abstract class TableAction {
 	protected String tableName;
 
-	protected abstract void applyUpdatesForTable(SQLiteDatabase db, Table table) throws SqlFormatException;
+	protected abstract void applyUpdatesForTable(SQLiteDatabase db, Table table) throws MigrationException;
+
+	protected boolean shodLoadDbInfo() {
+		return true;
+	}
+
+	protected final Table loadTable(SQLiteDatabase db) throws MigrationException {
+		return TableInfoLoader.forDB(db).loadTable(this.tableName);
+	}
 
 	public void applyUpdates(SQLiteDatabase db) throws MigrationException {
-		applyUpdatesForTable(db, TableInfoLoader.forDB(db).loadTable(this.tableName));
+		Table table = shodLoadDbInfo() ? loadTable(db) : null;
+		applyUpdatesForTable(db, table);
 	}
 
 	public TableAction(String tableName) {
