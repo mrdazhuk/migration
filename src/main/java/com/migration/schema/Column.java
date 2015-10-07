@@ -7,112 +7,145 @@ import com.migration.schema.type.DataType;
 /**
  * Created by yuriydazhuk on 9/28/15.
  */
-public class Column {
-	private boolean primary;
-	private boolean index;
-	private String name;
-	private DataType dataType;
-	private String defaultValue = "";
-	private boolean nullable = true;
+public class Column implements SqlStatement {
+    private boolean primary;
+    private boolean index;
+    private String name;
+    private DataType dataType;
+    private String defaultValue = "";
+    private boolean nullable = true;
 
-	private Column(Column column) {
-		this.dataType = column.getDataType();
-		this.primary = column.isPrimary();
-		this.name = column.getName();
-		this.index = column.isIndexed();
-		this.nullable = column.isNullable();
-		this.defaultValue = column.getDefaultValue();
-	}
 
-	private Column() {
-	}
+    private Reference reference;
 
-	public boolean isPrimary() {
-		return this.primary;
-	}
+    private Column(Column column) {
+        this.dataType = column.getDataType();
+        this.primary = column.isPrimary();
+        this.name = column.getName();
+        this.index = column.isIndexed();
+        this.nullable = column.isNullable();
+        this.defaultValue = column.getDefaultValue();
 
-	public boolean isIndexed() {
-		return this.index;
-	}
+        Reference reference = column.getReference();
+        if (reference != null) {
+            this.reference = new Reference(reference.getTableName(), reference.getReferenceFieldName());
+        }
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    private Column() {
+    }
 
-	public DataType getDataType() {
-		return this.dataType;
-	}
+    public boolean isPrimary() {
+        return this.primary;
+    }
 
-	public String getDefaultValue() {
-		return this.defaultValue;
-	}
+    public boolean isIndexed() {
+        return this.index;
+    }
 
-	public boolean isNullable() {
-		return this.nullable;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public static ColumnBuilder builder() {
-		return new ColumnBuilder();
-	}
+    public DataType getDataType() {
+        return this.dataType;
+    }
 
-	public String toSqlDefinitionString() throws SqlFormatException {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.name);
-		builder.append(" " + this.dataType.getName());
+    public String getDefaultValue() {
+        return this.defaultValue;
+    }
 
-		if (this.primary) {
-			builder.append("  PRIMARY KEY AUTOINCREMENT");
-		} else if (!this.nullable) {
-			builder.append(" NOT NULL");
+    public boolean isNullable() {
+        return this.nullable;
+    }
 
-			if (!TextUtils.isEmpty(this.defaultValue)) {
-				builder.append(" DEFAULT " + this.dataType.getFormattedDefaultValue(this.defaultValue));
-			} else {
-				throw new SqlFormatException(String.format("Missing default value for not nullable field '%s'", this.name));
-			}
-		}
-		return builder.toString();
-	}
+    public static ColumnBuilder builder() {
+        return new ColumnBuilder();
+    }
 
-	public static class ColumnBuilder {
-		private Column column = new Column();
+    public Reference getReference() {
+        return this.reference;
+    }
 
-		private ColumnBuilder() {
-		}
+    @Override
+    public String toSqlStatement() throws SqlFormatException {
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.name);
+        builder.append(" " + this.dataType.getName());
 
-		public ColumnBuilder primary() {
-			this.column.primary = true;
-			this.indexed();
-			return this;
-		}
+        if (this.primary) {
+            builder.append("  PRIMARY KEY AUTOINCREMENT");
+        }
+        if (!TextUtils.isEmpty(this.defaultValue)) {
+            builder.append(" DEFAULT " + this.dataType.getFormattedDefaultValue(this.defaultValue));
+        } else if (!this.nullable) {
+            throw new SqlFormatException(String.format("Missing default value for not nullable field '%s'", this.name));
+        }
+        if (!this.nullable) {
+            builder.append(" NOT NULL");
+        }
 
-		public ColumnBuilder indexed() {
-			this.column.index = true;
-			return this;
-		}
+        if (this.reference != null) {
+            builder.append(String.format(" REFERENCES %s", this.reference.toSqlStatement()));
+        }
 
-		public ColumnBuilder name(String name) {
-			this.column.name = name;
-			return this;
-		}
+        return builder.toString();
+    }
 
-		public ColumnBuilder type(String dataType) throws SqlFormatException {
-			this.column.dataType = DataType.fromString(dataType);
-			return this;
-		}
+    public static class ColumnBuilder {
+        private Column column = new Column();
 
-		public ColumnBuilder defaultValue(String defaultValue) {
-			this.column.defaultValue = defaultValue;
-			return this;
-		}
+        private ColumnBuilder() {
+        }
 
-		public ColumnBuilder notNull() {
-			this.column.nullable = false;
-			return this;
-		}
+        public ColumnBuilder primary() {
+            this.column.primary = true;
+            this.indexed();
+            return this;
+        }
 
-		public Column build() {
-			return new Column(this.column);
-		}
-	}
+        public ColumnBuilder indexed() {
+            this.column.index = true;
+            return this;
+        }
+
+        public ColumnBuilder name(String name) {
+            this.column.name = name;
+            return this;
+        }
+
+        public ColumnBuilder reference(String tableName) {
+            String[] parts = tableName.split("\\.");
+            if (parts.length == 1) {
+                this.column.reference = new Reference(tableName);
+            } else {
+                reference(parts[0], parts[1]);
+            }
+            return this;
+        }
+
+        public ColumnBuilder reference(String tableName, String referenceFieldName) {
+            this.column.reference = new Reference(tableName, referenceFieldName);
+            return this;
+        }
+
+        public ColumnBuilder type(String dataType) throws SqlFormatException {
+            this.column.dataType = DataType.fromString(dataType);
+            return this;
+        }
+
+        public ColumnBuilder defaultValue(String defaultValue) {
+            this.column.defaultValue = defaultValue;
+            return this;
+        }
+
+        public ColumnBuilder notNull() {
+            this.column.nullable = false;
+            return this;
+        }
+
+        public Column build() {
+            return new Column(this.column);
+        }
+    }
 }

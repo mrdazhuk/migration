@@ -25,7 +25,7 @@ public class AddColumns extends TableAction {
 	public void applyUpdatesForTable(SQLiteDatabase db, Table table) throws SqlFormatException {
 		for (Column column : this.columns) {
 			if (!table.containColumn(column.getName())) {
-				db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s", this.tableName, column.toSqlDefinitionString()));
+				db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s", this.tableName, column.toSqlStatement()));
 			}
 		}
 		new CreateIndexes(this.tableName, this.columns).applyUpdatesForTable(db, table);
