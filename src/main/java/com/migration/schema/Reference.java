@@ -28,7 +28,7 @@ class Reference implements SqlStatement {
 
 	@Override
 	public String toSqlStatement() throws SqlFormatException {
-		if(TextUtils.isEmpty(this.referenceFieldName)){
+		if(TextUtils.isEmpty(this.tableName	)){
 			throw  new SqlFormatException("Reference table name is empty");
 		}
 

@@ -38,7 +38,4 @@ public abstract class IndexesAction extends TableAction {
 			}
 		}
 	}
-
-
-
 }
