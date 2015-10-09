@@ -1,0 +1,91 @@
+Total migration format:
+
+{
+   "update":[
+
+   ],
+   "downgrade":[
+
+   ]
+}
+
+
+Actions:
+ [
+   {
+      "table_name":"Users",
+      "action":"create",
+      "columns":[
+         {
+            "name":"age",
+            "type":"INTEGER",
+            "nullable":true,
+            "default":"",
+            "primary":true
+         },
+         {
+            "name":"sex",
+            "type":"VARCHAR",
+            "nullable":false,
+            "default":"male"
+         }
+      ]
+   },
+   {
+      "table_name":"Users",
+      "action":"rename",
+      "name":"UUU"
+   },
+   {
+      "table_name":"Users",
+      "action":"drop"
+   },
+   {
+      "table_name":"Users",
+      "action":"add_columns",
+      "columns":[
+         {
+            "name":"age",
+            "type":"INTEGER",
+            "nullable":true,
+            "default":""
+         },
+         {
+            "name":"sex",
+            "type":"VARCHAR",
+            "nullable":false,
+            "default":"male"
+         }
+      ]
+   },
+   {
+      "table_name":"Users",
+      "action":"drop_columns",
+      "column_names":[
+         {
+            "name":"name1"
+         },
+         {
+            "name":"name2"
+         }
+      ]
+   },
+   {
+      "table_name":"Users",
+      "action":"update_columns",
+      "columns":[
+         {
+            "name":"age",
+            "type":"INTEGER",
+            "nullable":true,
+            "default":""
+         },
+         {
+            "name":"sex",
+            "type":"VARCHAR",
+            "nullable":false,
+            "default":"male"
+         }
+      ]
+   }
+]
