@@ -14,12 +14,12 @@ import java.io.InputStreamReader;
  * Created by yuriydazhuk on 9/29/15.
  */
 public class AssetsMigrationReader implements MigrationReader {
-	private static final String FILE_NAME = "migrations/%d.msql";
+	private static final String FILE_NAME = "migrations/%d.json";
 
 
 	private final Context context;
 
-	public AssetsMigrationReader(Context context ) {
+	public AssetsMigrationReader(Context context) {
 		this.context = context;
 	}
 
@@ -38,13 +38,9 @@ public class AssetsMigrationReader implements MigrationReader {
 		try {
 			InputStreamReader is = new InputStreamReader((inputStream), "UTF-8");
 			return new JsonParser().parse(new BufferedReader(is));
-		}  finally {
+		} finally {
 			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				reader.close();
 			}
 		}
 	}
