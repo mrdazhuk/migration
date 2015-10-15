@@ -25,6 +25,7 @@ public class JsonNodes {
 	public static final String NAMES_NODE = "names";
 
 	//Actions
+	public static final String ACTIONS = "action";
 	public static final String ADD_COLUMNS_ACTION_NODE = "add_columns";
 	public static final String DROP_COLUMNS_ACTION_NODE = "drop_columns";
 	public static final String UPDATE_COLUMNS_ACTION_NODE = "update_columns";

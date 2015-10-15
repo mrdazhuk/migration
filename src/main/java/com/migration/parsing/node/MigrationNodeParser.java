@@ -54,7 +54,7 @@ public class MigrationNodeParser implements NodeParser<VersionMigration, JsonEle
     }
 
     private ActionParser getActionParser(JsonObject jsonObject) throws ParseException {
-        String action = jsonObject.get("action").getAsString();
+        String action = jsonObject.get(JsonNodes.ACTIONS).getAsString();
 
         switch (action) {
             case JsonNodes.ADD_COLUMNS_ACTION_NODE:
