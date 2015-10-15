@@ -2,12 +2,14 @@ package com.migration;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.migration.parsing.MigrationParser;
+
 /**
  * Created by yuriydazhuk on 10/2/15.
  */
-public class UpdateMigration extends MigrationDirection {
-	public UpdateMigration(SQLiteDatabase db, MigrationReader migrationReader) {
-		super(db, migrationReader);
+public class UpdateMigration extends Migration {
+	public UpdateMigration(SQLiteDatabase db, MigrationParser migrationParser) {
+		super(db, migrationParser);
 	}
 
 	@Override
