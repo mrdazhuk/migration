@@ -1,6 +1,7 @@
 package com.migration.parsing.node;
 
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.migration.ParseException;
 import com.migration.parsing.JsonNodes;
@@ -15,6 +16,15 @@ public class RawNodeParser implements NodeParser<String, JsonObject> {
 		if (!json.has(JsonNodes.RAW_NODE)) {
 			throw new ParseException(String.format("Missing parameter '%s' for rename table", JsonNodes.RAW_NODE));
 		}
-		return json.get(JsonNodes.RAW_NODE).getAsString();
+		JsonElement rawElement = json.get(JsonNodes.RAW_NODE);
+		if (rawElement.isJsonArray()) {
+			StringBuilder stringBuilder = new StringBuilder();
+			for (JsonElement element : rawElement.getAsJsonArray()) {
+				stringBuilder.append(element.getAsString());
+			}
+			return stringBuilder.toString();
+		} else {
+			return rawElement.getAsString();
+		}
 	}
 }
